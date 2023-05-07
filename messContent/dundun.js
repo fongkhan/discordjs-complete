@@ -1,25 +1,11 @@
-const MUSIC_PATH = "./messContent/sound/dundun.mp3";
-const { getVoiceConnection,
-        createAudioPlayer,
-        createAudioResource, } = require('@discordjs/voice');
-    const audioPlayer = {
-      musicStream: createAudioPlayer(),
-      connection: null,
-      connectionId: null,
-    }
+const functions = require('./../utils/functions.js');
+const MUSIC_PATH = './messContent/sound/dundun.mp3';
+
 
 module.exports = {
-  name: '!dundun',
-  async execute(message) {
-    message.delete();
-    audioPlayer.connection = getVoiceConnection(message.member.voice.channel.guild.id);
-    audioPlayer.connection.subscribe(audioPlayer.musicStream);
-    if (!message.guild) return;
-    playMusic(MUSIC_PATH);
-  },
+	name: '!dundun',
+	async execute(message) {
+		message.delete();
+		functions.playMusic(message, MUSIC_PATH);
+	},
 };
-
-function playMusic(url){
-    const resource = createAudioResource(MUSIC_PATH)
-    audioPlayer.musicStream.play(resource);
-}
