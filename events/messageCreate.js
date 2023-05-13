@@ -4,17 +4,18 @@ module.exports = {
 	name: 'messageCreate', //Events.messageCreate
 	async execute(message) {
 		if (message.author.bot) return;
-		messContent = message.content.toLowerCase();
-		mcAnswer = Array.from(message.client.mcCommands.keys());
+		const messContent = message.content.toLowerCase();
+		const mcAnswer = Array.from(message.client.mcCommands.keys());
 		//const command = message.client.mcCommands.get(messContent);
 		try {
-			for (var i = 0; i < mcAnswer.length; i++) {
-				if(messContent.includes(mcAnswer[i])){
+			for (let i = 0; i < mcAnswer.length; i++) {
+				if (messContent.includes(mcAnswer[i])) {
 					const command = message.client.mcCommands.get(mcAnswer[i]);
 					await command.execute(message);
 				}
-			};
-		} catch (error) {
+			}
+		}
+		catch (error) {
 			console.error(`Error executing ${messContent}`);
 			console.error(error);
 		}
