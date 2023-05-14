@@ -1,10 +1,11 @@
+// const { ActivityType } = require('discord.js');
 const { joinVoiceChannel,
 	getVoiceConnection,
 	createAudioResource } = require('@discordjs/voice');
 const variables = require('./variables.js');
 
 module.exports = {
-	playMusic, join, deco,
+	playMusic, join, deco, changeActivity,
 };
 
 function playMusic(message, url) {
@@ -49,4 +50,8 @@ function deco(message, voiceChannel) {
 				setTimeout(() => msg.delete(), 2000);
 			});
 	}
+}
+
+function changeActivity(client, type, message) {
+	client.user.setActivity(message, { type: type });
 }
