@@ -7,7 +7,7 @@ module.exports = {
 	name: Events.ClientReady,
 	once: true,
 	execute(client) {
-		functions.changeActivity(client, ActivityType.Watching, 'Ouioui');
+		functions.changeActivity(true, client, ActivityType.Watching, 'Ouioui');
 		console.log(`Ready! Logged in as ${client.user.tag}`);
 	},
 };

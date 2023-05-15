@@ -1,0 +1,8 @@
+[
+    { "name": "Playing", "value": "ActivityType.Playing" },
+    { "name": "Streaming", "value": "ActivityType.Streaming" },
+    { "name": "Listening", "value": "ActivityType.Listening" },
+    { "name": "Watching", "value": "ActivityType.Watching" },
+    { "name": "Custom", "value": "ActivityType.Custom" },
+    { "name": "Competing", "value": "ActivityType.Competing" }
+]

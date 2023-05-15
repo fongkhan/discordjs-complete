@@ -1,8 +1,8 @@
-// const { ActivityType } = require('discord.js');
 const { joinVoiceChannel,
 	getVoiceConnection,
 	createAudioResource } = require('@discordjs/voice');
 const variables = require('./variables.js');
+const lists = ('./lists.js')
 
 module.exports = {
 	playMusic, join, deco, changeActivity,
@@ -52,6 +52,14 @@ function deco(message, voiceChannel) {
 	}
 }
 
-function changeActivity(client, type, message) {
-	client.user.setActivity(message, { type: type });
+function changeActivity(isClient, clInteraction, type, message) {
+	const valMess = lists.match(activity => activity.name === type);
+	if (isClient) {
+		clInteraction.user.setActivity(message, { type: valMess });
+		console.log('activity set to ' + valMess + ' | with the message : ' + message);
+		return
+	};
+	clInteraction.client.user.setActivity(message, { type: valMess });
+	console.log('activity set to ' + valMess + ' | with the message : ' + message);
+	clInteraction.reply({content: 'Activity Changed !', ephemeral: true});
 }
