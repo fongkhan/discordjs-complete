@@ -24,15 +24,32 @@ const audioPlayer = {
 };
 
 const lastActivityTimestamp = {
-	_value: null,
-	get value() {
-		return this._value;
+	_lastact: null,
+	_interval: 1800000,
+	get lastact() {
+		return this._lastact;
 	},
-	set value(newValue) {
-		this._value = newValue;
+	set lastact(newlastact) {
+		this._lastact = newlastact;
+	},
+	get interval() {
+		return this._interval;
+	},
+	set interval(newInterval) {
+		this._interval = newInterval;
+	},
+};
+
+const command_names = {
+	_names: null,
+	get names() {
+		return this._names;
+	},
+	set names(newNames) {
+		this._names = newNames;
 	},
 };
 
 module.exports = {
-	audioPlayer, lastActivityTimestamp,
+	audioPlayer, lastActivityTimestamp, command_names,
 };
