@@ -3,7 +3,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const { token } = require('./config.json');
-let command_names = null;
+const functions = require('./utils/functions.js');
+const variables = require('./utils/variables.js');
 
 const client = new Client({
 	intents: [
@@ -42,14 +43,12 @@ for (const file of messContentFiles) {
 	const command = require(filePath);
 	if ('execute' in command) {
 		client.mcCommands.set(command.name, command);
-		command_names = command_names + ' / ' + command.name;
+		variables.command_names.names = variables.command_names.names + ' / ' + command.name;
 	}
 	else {
 		console.log(`[WARNING] The command at ${filePath} is missing a required "execute" property.`);
 	}
 }
-
-console.log(command_names);
 
 const eventsPath = path.join(__dirname, 'events');
 const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
@@ -68,3 +67,12 @@ for (const file of eventFiles) {
 
 // Log in to Discord with your client's token
 client.login(token);
+
+// set interval to deconnect the bot with functions.deco() if no activity with variables.lastActivityTimestamp.value for last activity and variables.lastActivityTimestamp.interval for the interval
+setInterval(() => {
+	if (variables.lastActivityTimestamp.value) {
+		if (Date.now() - variables.lastActivityTimestamp.value > variables.lastActivityTimestamp.interval) {
+			functions.deco(null, variables.audioPlayer.connection.joinConfig.channelId);
+		}
+	}
+}, variables.lastActivityTimestamp.interval); 
