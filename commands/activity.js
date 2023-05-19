@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ActivityType } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 const functions = require('../utils/functions.js');
 
 module.exports = {
@@ -23,11 +23,10 @@ module.exports = {
 				.setRequired(true)),
 	async execute(interaction) {
 		const activity = interaction.options.getString('activite');
-		const message = interaction.options.getString('message')
+		const message = interaction.options.getString('message');
 		if (!interaction.member.permissions.has('ADMINISTRATOR')) {
 			return interaction.reply({content: 'Seuls les administrateurs peuvent changer l\'activité du bot.', ephemeral: true});
 		}
-
 		functions.changeActivity(false, interaction, activity, message);
 	},
 };

@@ -4,7 +4,7 @@ const { joinVoiceChannel,
 	createAudioResource } = require('@discordjs/voice');
 const variables = require('./variables.js');
 const lists = ('./activity.js');
-const { REST, Routes } = require('discord.js');
+const { REST, Routes, ActivityType } = require('discord.js');
 const { clientId, token } = require('./../config.json');
 const fs = require('node:fs');
 
@@ -62,16 +62,45 @@ function deco(message, voiceChannel) {
 
 // change the activity of the bot (playing, listening, watching, streaming) only for admins of the server
 function changeActivity(isClient, clInteraction, type, message) {
-	const valMess = lists.match(activity => activity.name === type);
+	// transform the type of activity to the one used by discord.js
+	const actValue = setValueActivity(type);
 	if (isClient) {
-		clInteraction.user.setActivity(message, { type: valMess });
-		console.log('activity set to ' + valMess + ' | with the message : ' + message);
+		clInteraction.user.setActivity(message, { type: actValue });
+		console.log('activity set to ' + type + ' | with the message : ' + message);
 		return
 	};
-	clInteraction.client.user.setActivity(message, { type: valMess });
-	console.log('activity set to ' + valMess + ' | with the message : ' + message);
+	clInteraction.client.user.setActivity(message, { type: actValue });
+	console.log('activity set to ' + type + ' | with the message : ' + message);
 	clInteraction.reply({content: 'Activity Changed !', ephemeral: true});
 }
+
+function setValueActivity(value) {
+	// change the value of activite to the one used by discord.js
+	let activityType;
+	switch (value) {
+		case 'Playing':
+			activityType = ActivityType.Playing;
+			break;
+		case 'Streaming':
+			activityType = ActivityType.Streaming;
+			break;
+		case 'Listening':
+			activityType = ActivityType.Listening;
+			break;
+		case 'Watching':
+			activityType = ActivityType.Watching;
+			break;
+		case 'Custom':
+			activityType = ActivityType.Custom;
+			break;
+		case 'Competing':	
+			activityType = ActivityType.Competing;
+			break;
+		default:
+			activityType = ActivityType.Playing;
+			break;
+	}
+	return activityType;};
 
 // refresh the commands of the bot
 function refreshCommands() {
