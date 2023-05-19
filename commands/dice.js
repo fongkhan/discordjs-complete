@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const functions = require('./../utils/functions.js');
+const functions = require('../utils/functions.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -26,6 +26,20 @@ module.exports = {
         const explode = interaction.options.getString('explode');
         const keep = interaction.options.getString('keep');
         const adding = interaction.options.getString('adding');
-		functions.rollAllDice(interaction, dice, explode, keep, adding);
+		//functions.rollAllDice(interaction, dice, explode, keep, adding);
+        const nbdiceroll = dice.split('+').join('-').split('-').join('*').split('*').join('/').split('/');
+	    let result = 0;
+	    // for each dices to roll
+	    for (let dice = 0; dice < nbdiceroll.length; dice++) {
+		    if (nbdiceroll[dice].includes('d') === false) { continue; }
+	    	// get the number of dices and the number of faces for the roll
+	    	const nbdice = nbdiceroll[dice].split('d')[0];
+	    	const maxface = nbdiceroll[dice].split('d')[1];
+	    	// roll dices
+	    	const resultdice = nbdice*(Math.floor(Math.random() * maxface));
+	    	// add the result to the total
+	    	result += resultdice;
+	    }
+	    interaction.reply({ content: `Result of ${interaction.user.username}\ndices : ${dice}\nresult : ${result}`, ephemeral: false });
 	},
 };

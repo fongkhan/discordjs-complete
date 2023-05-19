@@ -171,18 +171,19 @@ function refreshCommands() {
 // /roll 10d6 e6 k8 +4 : Roll ten six-sided dice , explode on sixes and keep eight of the highest rolls and add four.
 function rollAllDice(message, dices, explode, keep, adding) {
 	// split the dices to get the number of dices and the number of faces
-	const nbdiceroll = dices.split('+').split('-').split('*').split('/');
+    const nbdiceroll = dice.split('+').join('-').split('-').join('*').split('*').join('/').split('/');
 	let result = 0;
 	// for each dices to roll
-	for (let dice = 0; dice < nbdiceroll; dice++) {
+	for (let dice = 0; dice < nbdiceroll.length; dice++) {
 		// get the number of dices and the number of faces for the roll
-		const nbdice = dice.split('d')[0];
-		const maxface = dice.split('d')[1];
+		if (nbdiceroll[dice].includes('d') === false) { continue; }
+		const nbdice = nbdiceroll[dice].split('d')[0];
+		const maxface = nbdiceroll[dice].split('d')[1];
 		// roll dices
 		const resultdice = nbdice*(Math.floor(Math.random() * maxface));
 		// add the result to the total
 		result += resultdice;
 	}
-	console.log(result);
-	message.reply({ content: `Result of ${interaction.member.name} is : ${result}`, ephemeral: true });
+    console.log(result, nbdiceroll.length);
+	interaction.reply({ content: `Result of ${interaction.member.name} is : ${result}`, ephemeral: true });
 }
