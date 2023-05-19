@@ -1,4 +1,4 @@
-// Require the necessary discord.js classes
+// Require the necessary discord.js classes and files
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
@@ -6,6 +6,7 @@ const { token } = require('./config.json');
 const functions = require('./utils/functions.js');
 const variables = require('./utils/variables.js');
 
+// Create a new client instance
 const client = new Client({
 	intents: [
 		GatewayIntentBits.DirectMessages,
@@ -17,11 +18,14 @@ const client = new Client({
 	],
 });
 
+// create a new collection for the commands and the messContent
 client.commands = new Collection();
 
+// Read all the files in the commands folder to add them to the client.commands Collection
 const commandsPath = path.join(__dirname, 'commands');
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
+// Loop over all the files in the commands folder and add them to the client.commands Collection
 for (const file of commandFiles) {
 	const filePath = path.join(commandsPath, file);
 	const command = require(filePath);
@@ -29,6 +33,7 @@ for (const file of commandFiles) {
 	if ('data' in command && 'execute' in command) {
 		client.commands.set(command.data.name, command);
 	}
+	// If the command is missing a required property, log a warning to the console
 	else {
 		console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
 	}

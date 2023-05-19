@@ -1,3 +1,4 @@
+// require all the modules needed
 const { joinVoiceChannel,
 	getVoiceConnection,
 	createAudioResource } = require('@discordjs/voice');
@@ -7,10 +8,12 @@ const { REST, Routes } = require('discord.js');
 const { clientId, token } = require('./../config.json');
 const fs = require('node:fs');
 
+// export the functions to be used in the commands
 module.exports = {
 	playMusic, join, deco, changeActivity, refreshCommands,
 };
 
+// play the music from the url given in the command message in the voice channel the user is in
 function playMusic(message, url) {
 	if (!message.guild) return;
 	const connection = variables.audioPlayer.connection;
@@ -21,6 +24,7 @@ function playMusic(message, url) {
 	variables.audioPlayer.musicStream.play(resource);
 }
 
+// join the voice channel the user is in
 function join(message, voiceChannel) {
 	if (message.member.voice.channel) {
 		joinVoiceChannel({
@@ -39,6 +43,7 @@ function join(message, voiceChannel) {
 	}
 }
 
+// deconnect the bot from the voice channel the user is in
 function deco(message, voiceChannel) {
 	if (!message.guild) return;
 	message.delete();
@@ -55,6 +60,7 @@ function deco(message, voiceChannel) {
 	}
 }
 
+// change the activity of the bot (playing, listening, watching, streaming) only for admins of the server
 function changeActivity(isClient, clInteraction, type, message) {
 	const valMess = lists.match(activity => activity.name === type);
 	if (isClient) {
@@ -67,7 +73,7 @@ function changeActivity(isClient, clInteraction, type, message) {
 	clInteraction.reply({content: 'Activity Changed !', ephemeral: true});
 }
 
-
+// refresh the commands of the bot
 function refreshCommands() {
 	const commands = [];
 	// Grab all the command files from the commands directory you created earlier
