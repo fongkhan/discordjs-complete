@@ -8,7 +8,11 @@ module.exports = {
 		.setDescription('rafraichit les commandes en slash'),
 	async execute(interaction) {
 		await interaction.reply({content: `Rafraichissement des commandes en cours...`, ephemeral: true});
-        functions.refreshCommands();
+		try {
+	        functions.refreshCommands();
+		} catch (error) {
+			console.error(error);
+		}
         await interaction.editReply({content: 'Rafraichissement des commandes terminé !', ephemeral: true});
 	},
 };
