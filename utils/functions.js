@@ -7,7 +7,6 @@ const lists = ('./activity.js');
 const { REST, Routes, ActivityType } = require('discord.js');
 const { clientId, token } = require('./../config.json');
 const fs = require('node:fs');
-const dice = require('../commands/dice.js');
 
 // play the music from the url given in the command message in the voice channel the user is in
 function playMusic(message, url) {
