@@ -39,31 +39,39 @@ for (const file of commandFiles) {
 	}
 }
 
+// create a new collection for the messContent
 client.mcCommands = new Collection();
 
+// Read all the files in the messContent folder to add them to the client.mcCommands Collection
 const messContentPath = path.join(__dirname, 'messContent');
 const messContentFiles = fs.readdirSync(messContentPath).filter(file => file.endsWith('.js'));
+// Loop over all the files in the messContent folder and add them to the client.mcCommands Collection
 for (const file of messContentFiles) {
 	const filePath = path.join(messContentPath, file);
 	const command = require(filePath);
+	// Set a new item in the Collection with the key as the command name and the value as the exported module
 	if ('execute' in command) {
 		client.mcCommands.set(command.name, command);
 		variables.command_names.names = variables.command_names.names + ' / ' + command.name;
 	}
+	// If the command is missing a required property, log a warning to the console
 	else {
 		console.log(`[WARNING] The command at ${filePath} is missing a required "execute" property.`);
 	}
 }
 
+// Read all the files in the events folder to add them to the client
 const eventsPath = path.join(__dirname, 'events');
 const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
-
+// Loop over all the files in the events folder and add them to the client
 for (const file of eventFiles) {
 	const filePath = path.join(eventsPath, file);
 	const event = require(filePath);
+	// Set a new item in the Collection with the key as the event name and the value as the exported module
 	if (event.once) {
 		client.once(event.name, (...args) => event.execute(...args));
 	}
+	// If the event is missing a required property, log a warning to the console
 	else {
 		client.on(event.name, (...args) => event.execute(...args));
 	}
