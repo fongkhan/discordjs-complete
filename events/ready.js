@@ -1,4 +1,4 @@
-const { Events, ActivityType } = require('discord.js');
+const { Events } = require('discord.js');
 const functions = require('./../utils/functions.js');
 
 // When the client is ready, run this code (only once)
