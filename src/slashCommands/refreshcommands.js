@@ -12,6 +12,7 @@ module.exports = {
 	        functions.refreshCommands();
 		} catch (error) {
 			console.error(error);
+			return interaction.editReply({content: 'Il y a eu une erreur lors du rafraichissement des commandes.', ephemeral: true});
 		}
         await interaction.editReply({content: 'Rafraichissement des commandes terminé !', ephemeral: true});
 	},

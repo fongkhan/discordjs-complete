@@ -8,10 +8,11 @@ const { REST, Routes, ActivityType } = require('discord.js');
 const { clientId, token } = require('./../config.json');
 const fs = require('node:fs');
 const axios = require("axios");
+const path = require('node:path');
 
 // export the functions to be used in the commands
 module.exports = {
-	playMusic, join, deco, changeActivity, refreshCommands, rollDice
+	playMusic, join, deco, changeActivity, refreshCommands, rollDice, getApiData,
 };
 
 // play the music from the url given in the command message in the voice channel the user is in
@@ -107,11 +108,12 @@ function setValueActivity(value) {
 function refreshCommands() {
 	const commands = [];
 	// Grab all the command files from the commands directory you created earlier
-	const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+	const commandPath = path.join(__dirname, './../slashCommands/');
+	const commandFiles = fs.readdirSync(commandPath).filter(file => file.endsWith('.js'));
 
 	// Grab the SlashCommandBuilder#toJSON() output of each command's data for deployment
 	for (const file of commandFiles) {
-		const command = require(`./../commands/${file}`);
+		const command = require(`./../slashCommands/${file}`);
 		commands.push(command.data.toJSON());
 	}
 
@@ -159,15 +161,14 @@ function rollDice(interaction, dice, explode, keep, adding) {
 }
 
 // function to retrieve the data fro an API and return it in a JSON format
-async function getApiData(url) {
+async function getApiData(interaction, pokemonName) {
 	axios
-    	  .get(`https://pokebuildapi.fr/api/v1/pokemon/${pokemonName}`)
-    	  .then((response) => {
-			variables.api.data = response.data;
-		  })
-		  .catch((error) => {
-    	    console.error(error);
-    	    interaction.reply({content:"Il y a une erreur dans le nom du pokemon ou le pokemon n'existe pas.", ephemeral: true});
-    	  });
-	return data;
+    	.get(`https://pokebuildapi.fr/api/v1/pokemon/${pokemonName}`)
+    	.then((response) => {
+			return response.data;
+		})
+		.catch((error) => {
+    	  console.error(error);
+    	  interaction.reply({content:"Il y a une erreur dans la récupération des données", ephemeral: true});
+    	});
 }

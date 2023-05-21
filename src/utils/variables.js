@@ -50,16 +50,6 @@ const command_names = {
 	},
 };
 
-const api = {
-	_data: null,
-	get data() {
-		return this._data;
-	},
-	set data(newData) {
-		this._data = newData;
-	},
-};
-
 module.exports = {
-	audioPlayer, lastActivityTimestamp, command_names, api,
+	audioPlayer, lastActivityTimestamp, command_names,
 };

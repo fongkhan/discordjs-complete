@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const axios = require("axios");
+const functions = require('./../utils/functions.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -11,8 +12,7 @@ module.exports = {
 				.setRequired(true)),
 	async execute(interaction) {
 		const pokemonName = interaction.options.getString('id_ou_nom');
-		functions.getApiData(`https://pokebuildapi.fr/api/v1/pokemon/${pokemonName}`);
-		console.log(variables.api.data);
+		const data = await functions.getApiData(interaction,pokemonName);
     	axios
     	  .get(`https://pokebuildapi.fr/api/v1/pokemon/${pokemonName}`)
     	  .then((response) => {
