@@ -22,7 +22,7 @@ const client = new Client({
 client.commands = new Collection();
 
 // Read all the files in the commands folder to add them to the client.commands Collection
-const commandsPath = path.join(__dirname, 'commands');
+const commandsPath = path.join(__dirname, 'slashCommands');
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
 // Loop over all the files in the commands folder and add them to the client.commands Collection
