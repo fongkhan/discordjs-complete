@@ -7,6 +7,12 @@ const lists = ('./activity.js');
 const { REST, Routes, ActivityType } = require('discord.js');
 const { clientId, token } = require('./../config.json');
 const fs = require('node:fs');
+const axios = require("axios");
+
+// export the functions to be used in the commands
+module.exports = {
+	playMusic, join, deco, changeActivity, refreshCommands, rollDice
+};
 
 // play the music from the url given in the command message in the voice channel the user is in
 function playMusic(message, url) {
@@ -139,11 +145,11 @@ function rollDice(interaction, dice, explode, keep, adding) {
     const nbdiceroll = dice.split('+').join('-').split('-').join('*').split('*').join('/').split('/');
 	let result = 0;
 	// for each dices to roll
-	for (let dice = 0; dice < nbdiceroll.length; dice++) {
-	    if (nbdiceroll[dice].includes('d') === false) { continue; }
+	for (const element of nbdiceroll) {
+	    if (element.includes('d') === false) { continue; }
 		// get the number of dices and the number of faces for the roll
-		const nbdice = nbdiceroll[dice].split('d')[0];
-		const maxface = nbdiceroll[dice].split('d')[1];
+		const nbdice = element.split('d')[0];
+		const maxface = element.split('d')[1];
 		// roll dices
 		const resultdice = nbdice*(Math.floor(Math.random() * maxface));
 		// add the result to the total
@@ -152,7 +158,16 @@ function rollDice(interaction, dice, explode, keep, adding) {
 	interaction.reply({ content: `Result of ${interaction.user.username}\ndices : ${dice}\nresult : ${result}`, ephemeral: false });
 }
 
-// export the functions to be used in the commands
-module.exports = {
-	playMusic, join, deco, changeActivity, refreshCommands, rollDice
-};
+// function to retrieve the data fro an API and return it in a JSON format
+async function getApiData(url) {
+	axios
+    	  .get(`https://pokebuildapi.fr/api/v1/pokemon/${pokemonName}`)
+    	  .then((response) => {
+			variables.api.data = response.data;
+		  })
+		  .catch((error) => {
+    	    console.error(error);
+    	    interaction.reply({content:"Il y a une erreur dans le nom du pokemon ou le pokemon n'existe pas.", ephemeral: true});
+    	  });
+	return data;
+}
