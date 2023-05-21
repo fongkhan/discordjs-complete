@@ -2,9 +2,9 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
-const { token } = require('./config.json');
-const functions = require('./utils/functions.js');
-const variables = require('./utils/variables.js');
+const { token } = require('./src/config.json');
+const functions = require('./src/utils/functions.js');
+const variables = require('./src/utils/variables.js');
 
 // Create a new client instance
 const client = new Client({
@@ -22,7 +22,7 @@ const client = new Client({
 client.commands = new Collection();
 
 // Read all the files in the commands folder to add them to the client.commands Collection
-const commandsPath = path.join(__dirname, 'slashCommands');
+const commandsPath = path.join(__dirname, 'src/slashCommands');
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
 // Loop over all the files in the commands folder and add them to the client.commands Collection
@@ -43,11 +43,11 @@ for (const file of commandFiles) {
 client.mcCommands = new Collection();
 
 // Read all the files in the messContent folder to add them to the client.mcCommands Collection
-const messContentPath = path.join(__dirname, 'messContent');
-const messContentFiles = fs.readdirSync(messContentPath).filter(file => file.endsWith('.js'));
+const messageCommandsPath = path.join(__dirname, 'src/messageCommands');
+const messageCommandsFiles = fs.readdirSync(messageCommandsPath).filter(file => file.endsWith('.js'));
 // Loop over all the files in the messContent folder and add them to the client.mcCommands Collection
-for (const file of messContentFiles) {
-	const filePath = path.join(messContentPath, file);
+for (const file of messageCommandsFiles) {
+	const filePath = path.join(messageCommandsPath, file);
 	const command = require(filePath);
 	// Set a new item in the Collection with the key as the command name and the value as the exported module
 	if ('execute' in command) {
@@ -61,7 +61,7 @@ for (const file of messContentFiles) {
 }
 
 // Read all the files in the events folder to add them to the client
-const eventsPath = path.join(__dirname, 'events');
+const eventsPath = path.join(__dirname, 'src/events');
 const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
 // Loop over all the files in the events folder and add them to the client
 for (const file of eventFiles) {
