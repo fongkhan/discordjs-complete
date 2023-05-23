@@ -9,7 +9,11 @@ module.exports = {
 		.addStringOption(option => 
 			option.setName('id_ou_nom')
 				.setDescription('id ou nom du pokemon')
-				.setRequired(true)),
+				.setRequired(true))
+		.addStringOption(option => 
+			option.setName('language')
+				.setDescription('Which language')
+				.setRequired(false)),
 	async execute(interaction) {
 		const pokemonName = interaction.options.getString('id_ou_nom');
 		const data = await functions.getApiData(interaction,pokemonName);
