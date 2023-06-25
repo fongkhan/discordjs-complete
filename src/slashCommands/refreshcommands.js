@@ -7,13 +7,14 @@ module.exports = {
 		.setName('refreshcommands')
 		.setDescription('rafraichit les commandes en slash'),
 	async execute(interaction) {
-		await interaction.reply({content: `Rafraichissement des commandes en cours...`, ephemeral: true});
+		await interaction.reply({ content: 'Rafraichissement des commandes en cours...', ephemeral: true });
 		try {
-	        functions.refreshCommands();
-		} catch (error) {
-			console.error(error);
-			return interaction.editReply({content: 'Il y a eu une erreur lors du rafraichissement des commandes.', ephemeral: true});
+			functions.refreshCommands();
 		}
-        await interaction.editReply({content: 'Rafraichissement des commandes terminé !', ephemeral: true});
+		catch (error) {
+			console.error(error);
+			return interaction.editReply({ content: 'Il y a eu une erreur lors du rafraichissement des commandes.', ephemeral: true });
+		}
+		await interaction.editReply({ content: 'Rafraichissement des commandes terminé !', ephemeral: true });
 	},
 };

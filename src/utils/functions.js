@@ -3,11 +3,10 @@ const { joinVoiceChannel,
 	getVoiceConnection,
 	createAudioResource } = require('@discordjs/voice');
 const variables = require('./variables.js');
-const lists = ('./activity.js');
 const { REST, Routes, ActivityType } = require('discord.js');
 const { clientId, token } = require('./../config.json');
 const fs = require('node:fs');
-const axios = require("axios");
+const axios = require('axios');
 const path = require('node:path');
 
 // export the functions to be used in the commands
@@ -69,40 +68,41 @@ function changeActivity(isClient, clInteraction, type, message) {
 	if (isClient) {
 		clInteraction.user.setActivity(message, { type: actValue });
 		console.log('activity set to ' + type + ' | with the message : ' + message);
-		return
-	};
+		return;
+	}
 	clInteraction.client.user.setActivity(message, { type: actValue });
 	console.log('activity set to ' + type + ' | with the message : ' + message);
-	clInteraction.reply({content: 'Activity Changed !', ephemeral: true});
+	clInteraction.reply({ content: 'Activity Changed !', ephemeral: true });
 }
 
 function setValueActivity(value) {
 	// change the value of activite to the one used by discord.js
 	let activityType;
 	switch (value) {
-		case 'Playing':
-			activityType = ActivityType.Playing;
-			break;
-		case 'Streaming':
-			activityType = ActivityType.Streaming;
-			break;
-		case 'Listening':
-			activityType = ActivityType.Listening;
-			break;
-		case 'Watching':
-			activityType = ActivityType.Watching;
-			break;
-		case 'Custom':
-			activityType = ActivityType.Custom;
-			break;
-		case 'Competing':	
-			activityType = ActivityType.Competing;
-			break;
-		default:
-			activityType = ActivityType.Playing;
-			break;
+	case 'Playing':
+		activityType = ActivityType.Playing;
+		break;
+	case 'Streaming':
+		activityType = ActivityType.Streaming;
+		break;
+	case 'Listening':
+		activityType = ActivityType.Listening;
+		break;
+	case 'Watching':
+		activityType = ActivityType.Watching;
+		break;
+	case 'Custom':
+		activityType = ActivityType.Custom;
+		break;
+	case 'Competing':
+		activityType = ActivityType.Competing;
+		break;
+	default:
+		activityType = ActivityType.Playing;
+		break;
 	}
-	return activityType;};
+	return activityType;
+}
 
 // refresh the commands of the bot
 function refreshCommands() {
@@ -124,13 +124,13 @@ function refreshCommands() {
 	(async () => {
 		try {
 			console.log(`Started refreshing ${commands.length} application (/) commands.`);
-		
+
 			// The put method is used to fully refresh all commands in the guild with the current set
 			const data = await rest.put(
 				Routes.applicationCommands(clientId),
 				{ body: commands },
 			);
-			
+
 			console.log(`Successfully reloaded ${data.length} application (/) commands.`);
 		}
 		catch (error) {
@@ -142,18 +142,19 @@ function refreshCommands() {
 
 // function to return the result of dices launched by the user
 // example : /roll 2d6 => return the result of 2 dices of 6 faces
+// eslint-disable-next-line no-unused-vars
 function rollDice(interaction, dice, explode, keep, adding) {
 	// split the dices to get the number of dices and the number of faces
-    const nbdiceroll = dice.split('+').join('-').split('-').join('*').split('*').join('/').split('/');
+	const nbdiceroll = dice.split('+').join('-').split('-').join('*').split('*').join('/').split('/');
 	let result = 0;
 	// for each dices to roll
 	for (const element of nbdiceroll) {
-	    if (element.includes('d') === false) { continue; }
+		if (element.includes('d') === false) { continue; }
 		// get the number of dices and the number of faces for the roll
 		const nbdice = element.split('d')[0];
 		const maxface = element.split('d')[1];
 		// roll dices
-		const resultdice = nbdice*(Math.floor(Math.random() * maxface));
+		const resultdice = nbdice * (Math.floor(Math.random() * maxface));
 		// add the result to the total
 		result += resultdice;
 	}
@@ -163,12 +164,12 @@ function rollDice(interaction, dice, explode, keep, adding) {
 // function to retrieve the data fro an API and return it in a JSON format
 async function getApiData(interaction, pokemonName) {
 	axios
-    	.get(`https://pokebuildapi.fr/api/v1/pokemon/${pokemonName}`)
-    	.then((response) => {
+		.get(`https://pokebuildapi.fr/api/v1/pokemon/${pokemonName}`)
+		.then((response) => {
 			return response.data;
 		})
 		.catch((error) => {
-    	  console.error(error);
-    	  interaction.reply({content:"Il y a une erreur dans la récupération des données", ephemeral: true});
-    	});
+			console.error(error);
+			interaction.reply({ content:'Il y a une erreur dans la récupération des données', ephemeral: true });
+		});
 }

@@ -88,4 +88,4 @@ setInterval(() => {
 			functions.deco(null, variables.audioPlayer.connection.joinConfig.channelId);
 		}
 	}
-}, variables.lastActivityTimestamp.interval); 
+}, variables.lastActivityTimestamp.interval);
