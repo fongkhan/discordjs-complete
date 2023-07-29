@@ -89,3 +89,9 @@ setInterval(() => {
 		}
 	}
 }, variables.lastActivityTimestamp.interval);
+
+// set interval of 1 minute to check if a stream on twitch is online and send a message if it is the case
+// ex : fongkhan is live ! https://www.twitch.tv/fongkhan
+setInterval(() => {
+//	functions.checkTwitchStreamers();
+}, 60000);

@@ -11,7 +11,7 @@ const path = require('node:path');
 
 // export the functions to be used in the commands
 module.exports = {
-	playMusic, join, deco, changeActivity, refreshCommands, rollDice, getApiData,
+	playMusic, join, deco, changeActivity, refreshCommands, rollDice, getApiData, checkTwitchStreamers,
 };
 
 // play the music from the url given in the command message in the voice channel the user is in
@@ -172,4 +172,33 @@ async function getApiData(interaction, pokemonName) {
 			console.error(error);
 			interaction.reply({ content:'Il y a une erreur dans la récupération des données', ephemeral: true });
 		});
+}
+
+// async function to check if a stream on twitch is online and send a message if it is the case
+async function checkTwitchStreamers(client) {
+	// get the list of streamers from the variables
+	const streamers = variables.streamers.streamers;
+	// for each streamer
+	for (const element of streamers) {
+		// get the data from the api with axios and the streamer name without the twitch api url
+		axios // eslint-disable-next-line no-await-in-loop
+			.get(`https://api.twitch.tv/helix/streams?user_login=${element}`, {
+				headers: { client_id:'4h7e1a40cq336kzgcv3b1gsv0pl7xv' },
+			})
+			.then(async (response) => {
+				// if the streamer is online
+				if (response.data.data.length > 0) {
+					// get the data of the streamer
+					const data = response.data.data[0];
+					// get the data of the game the streamer is playing
+					const game = await axios.get(`https://api.twitch.tv/helix/games?id=${data.game_id}`, {
+						headers: { client_id:'4h7e1a40cq336kzgcv3b1gsv0pl7xv' },
+					});
+					// send a message in the channel of the streamer
+					client.channels.cache.get('884672836550373888').send(`${data.user_name} is live !\nhttps://www.twitch.tv/${data.user_name}\nPlaying : ${game.data.data[0].name}`);
+
+				}
+			}) // eslint-disable-next-line no-console
+			.catch((error) => console.error(error));
+	}
 }

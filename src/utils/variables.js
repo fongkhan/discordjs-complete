@@ -50,6 +50,19 @@ const command_names = {
 	},
 };
 
+
+// set getter and setter of a list with each element being a hyperlink to streamers on twitch only
+// ex : fongkhan
+const streamers = {
+	_streamers: ['fongkhan'],
+	get streamers() {
+		return this._streamers;
+	},
+	set streamers(newStreamers) {
+		this._streamers = newStreamers;
+	},
+};
+
 module.exports = {
-	audioPlayer, lastActivityTimestamp, command_names,
+	audioPlayer, lastActivityTimestamp, command_names, streamers,
 };
