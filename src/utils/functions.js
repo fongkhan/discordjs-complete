@@ -8,10 +8,19 @@ const { clientId, token } = require('./../config.json');
 const fs = require('node:fs');
 const axios = require('axios');
 const path = require('node:path');
+const ytdl = require('ytdl-core');
 
 // export the functions to be used in the commands
 module.exports = {
-	playMusic, join, deco, changeActivity, refreshCommands, rollDice, getApiData, checkTwitchStreamers,
+	playMusic,
+	join,
+	deco,
+	changeActivity,
+	refreshCommands,
+	rollDice,
+	getApiData,
+	checkTwitchStreamers,
+	downloadYoutubeVideo,
 };
 
 // play the music from the url given in the command message in the voice channel the user is in
@@ -201,4 +210,26 @@ async function checkTwitchStreamers(client) {
 			}) // eslint-disable-next-line no-console
 			.catch((error) => console.error(error));
 	}
+}
+
+// function to download a video from youtube as audio
+async function downloadYoutubeVideo(url) {
+	const videoId = await extractYouTubeVideoId(url);
+	if (!videoId) {
+		throw new Error('Invalid YouTube URL');
+	}
+	const info = await ytdl.getInfo(videoId);
+	const format = ytdl.chooseFormat(info.formats, { quality: 'highestaudio' });
+	if (!format) {
+		throw new Error('No audio format found');
+	}
+	const link = `./sound/${videoId}.mp3`;
+	variables.youtube_link.link = link;
+	return ytdl(videoId, { quality: 'highestaudio' })
+		.pipe(fs.createWriteStream(link));
+}
+
+async function extractYouTubeVideoId(url) {
+	const match = url.match(/(?:\/|%3D|v=|vi=)([0-9A-Za-z_-]{11})(?:[%#?&]|$)/);
+	return match ? match[1] : null;
 }

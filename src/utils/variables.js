@@ -63,6 +63,16 @@ const streamers = {
 	},
 };
 
+const youtube_link = {
+	_link: null,
+	get link() {
+		return this._link;
+	},
+	set link(newLink) {
+		this._link = newLink;
+	},
+};
+
 module.exports = {
-	audioPlayer, lastActivityTimestamp, command_names, streamers,
+	audioPlayer, lastActivityTimestamp, command_names, streamers, youtube_link,
 };
