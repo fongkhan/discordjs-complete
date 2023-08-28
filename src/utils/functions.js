@@ -9,6 +9,7 @@ const fs = require('node:fs');
 const axios = require('axios');
 const path = require('node:path');
 const ytdl = require('ytdl-core');
+const Roll = require('roll');
 
 // export the functions to be used in the commands
 module.exports = {
@@ -17,10 +18,10 @@ module.exports = {
 	deco,
 	changeActivity,
 	refreshCommands,
-	rollDice,
 	getApiData,
 	checkTwitchStreamers,
 	downloadYoutubeVideo,
+	rollDice,
 };
 
 // play the music from the url given in the command message in the voice channel the user is in
@@ -149,27 +150,6 @@ function refreshCommands() {
 	})();
 }
 
-// function to return the result of dices launched by the user
-// example : /roll 2d6 => return the result of 2 dices of 6 faces
-// eslint-disable-next-line no-unused-vars
-function rollDice(interaction, dice, explode, keep, adding) {
-	// split the dices to get the number of dices and the number of faces
-	const nbdiceroll = dice.split('+').join('-').split('-').join('*').split('*').join('/').split('/');
-	let result = 0;
-	// for each dices to roll
-	for (const element of nbdiceroll) {
-		if (element.includes('d') === false) { continue; }
-		// get the number of dices and the number of faces for the roll
-		const nbdice = element.split('d')[0];
-		const maxface = element.split('d')[1];
-		// roll dices
-		const resultdice = nbdice * (Math.floor(Math.random() * maxface));
-		// add the result to the total
-		result += resultdice;
-	}
-	interaction.reply({ content: `Result of ${interaction.user.username}\ndices : ${dice}\nresult : ${result}`, ephemeral: false });
-}
-
 // function to retrieve the data fro an API and return it in a JSON format
 async function getApiData(interaction, pokemonName) {
 	axios
@@ -232,4 +212,43 @@ async function downloadYoutubeVideo(url) {
 async function extractYouTubeVideoId(url) {
 	const match = url.match(/(?:\/|%3D|v=|vi=)([0-9A-Za-z_-]{11})(?:[%#?&]|$)/);
 	return match ? match[1] : null;
+}
+
+function rollDice(interaction, dice) {
+	const roll = new Roll();
+	const result = roll.roll(dice);
+	let detail_dice = '';
+	// for each dices rolled put the result in a variable depending on the result of the dice
+	// eslint-disable-next-line no-unused-vars
+	// console.log(result.rolled);
+	for (const value in result.rolled) {
+		// console.log(result.rolled[value]);
+		// dices that are 1 or 20 are colored in red
+		if (result.rolled[value] === 1 || result.rolled[value] === 20) {
+			detail_dice = detail_dice + `\u001b[1;31m${result.rolled[value]}\u001b[0;0m, `;
+		}
+		// dices that are 2 or 19 are colored in yellow
+		else if (result.rolled[value] === 2 || result.rolled[value] === 19) {
+			detail_dice = detail_dice + `\u001b[1;33m${result.rolled[value]}\u001b[0;0m, `;
+		}
+		// dices that are 3 or 18 are colored in green
+		else if (result.rolled[value] === 3 || result.rolled[value] === 18) {
+			detail_dice = detail_dice + `\u001b[1;32m${result.rolled[value]}\u001b[0;0m, `;
+		}
+		// dices that are 4 or 17 are colored in cyan
+		else if (result.rolled[value] === 4 || result.rolled[value] === 17) {
+			detail_dice = detail_dice + `\u001b[1;36m${result.rolled[value]}\u001b[0;0m, `;
+		}
+		// other dices are colored in white
+		else {
+			detail_dice = detail_dice + `\u001b[1;0m${result.rolled[value]}\u001b[0;0m, `;
+		}
+	}
+	// remove the last comma from the string
+	detail_dice = detail_dice.slice(0, -2);
+	// send the result of the roll in the channel
+	interaction.followUp({
+		content: `\`\`\`ansi\nDés lancés: ${dice}\nRésultat du lancer: \u001b[1;34m${result.result}\u001b[0;0m\nDétail: ${detail_dice}\`\`\`` });
+	console.log('dice rolled');
+	return true;
 }
